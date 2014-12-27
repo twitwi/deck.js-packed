@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version d8c74bcc860ba175ab020fd69656abee3fc057f3 .
+  It has been generated from version 6c56aa0a2c3654c3827e8bc8049a9512887d731a .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -293,7 +293,8 @@ function includedeck(m, c) {
         $(function() {
             var doIt = function() {
                 cb.beforeInit();
-                $.deck(conf);
+                window.defaultDeckCallIsAnError = true;
+                $.deck('init', conf);
                 cb.afterInit();
                 cb.atExit();
             };
@@ -634,11 +635,12 @@ that use the API provided by core.
   var setupHashBehaviors = function() {
     $fragmentLinks = $();
     $.each(slides, function(i, $slide) {
-      var hash;
+      var hash, altHash;
 
       assignSlideId(i, $slide);
       hash = '#' + $slide.attr('id');
-      if (hash === window.location.hash) {
+      altHash = '#/' + $slide.attr('id');
+      if (hash === window.location.hash || altHash === window.location.hash) {
         setTimeout(function() {
           $.deck('go', i);
         }, 1);
@@ -938,7 +940,12 @@ that use the API provided by core.
       return methods[method].apply(this, args);
     }
     else {
-      return methods.init(method, arg);
+      if (window.defaultDeckCallIsAnError) {
+        alert("'" + method + "' not found (or meant to be a parameter-less init)");
+      }
+      else {
+        return methods.init(method, arg);
+      }
     }
   };
 
@@ -6500,7 +6507,9 @@ It also overrides the defaults keybinding and countNested value (so it is better
             // down arrow,
             nextTopLevel: [40],
             // key 'z'
-            nextEndOfTopLevel: [90]
+            nextEndOfTopLevel: [90],
+            // key 'a'
+            previousEndOfTopLevel: [65]
         },
         countNested: false
     });
@@ -6569,6 +6578,15 @@ It also overrides the defaults keybinding and countNested value (so it is better
             $[deck]('go', icur-1);            
         }
     });
+    $[deck]('extend', 'previousEndOfTopLevelSlide', function() {
+        /* Find the current parent and take the previous slide (last of previous top level) */
+        var current = $[deck]('getSlideIndex', $[deck]('getSlide'));
+        var currentParent = $[deck]('getToplevelSlideOfIndex', current).index;
+        alert(current + " " +currentParent)
+        if (currentParent > 0) {
+            $[deck]('go', currentParent - 1);
+        }
+    });
     $d.bind('deck.init', function() {
         $d.unbind('keydown.decknexttoplevel').bind('keydown.decknexttoplevel', function(e) {
             var $opts = $[deck]('getOptions');
@@ -6592,6 +6610,14 @@ It also overrides the defaults keybinding and countNested value (so it is better
             if (e.which === key || $.inArray(e.which, key) > -1) {
                 e.preventDefault();
                 $[deck]('previousTopLevelSlide');
+            }
+        });
+        $d.unbind('keydown.deckpreviousendoftoplevel').bind('keydown.deckpreviousendoftoplevel', function(e) {
+            var $opts = $[deck]('getOptions');
+            var key = $opts.keys.previousEndOfTopLevel;
+            if (e.which === key || $.inArray(e.which, key) > -1) {
+                e.preventDefault();
+                $[deck]('previousEndOfTopLevelSlide');
             }
         });
     });
