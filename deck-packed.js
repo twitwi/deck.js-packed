@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 6c56aa0a2c3654c3827e8bc8049a9512887d731a .
+  It has been generated from version 6c9661c574585b3ebdfd104fe5918e5dd70a349c .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -6762,16 +6762,16 @@ https://github.com/imakewebthings/deck.js/blob/master/MIT-license.txt
             fast: function(c) {c.all().animate({'opacity': 0.}, 0)}
         });
         classical(o.selectors.animAddClass, {
-            init: function(c) {c.all().removeClass(c.classs())},
-            undo: function(c) {c.all().removeClass(c.classs())},
-            doit: function(c) {c.all().addClass(c.classs())},
-            fast: function(c) {c.all().addClass(c.classs())}
+            init: function(c) {c.all().each(function() { this.classList.remove(c.classs()) })},
+            undo: function(c) {c.all().each(function() { this.classList.remove(c.classs()) })},
+            doit: function(c) {c.all().each(function() { this.classList.add(c.classs()) })},
+            fast: function(c) {c.all().each(function() { this.classList.add(c.classs()) })} 
         });
         classical(o.selectors.animRemoveClass, {
-            init: function(c) {c.all().addClass(c.classs())},
-            undo: function(c) {c.all().addClass(c.classs())},
-            doit: function(c) {c.all().removeClass(c.classs())},
-            fast: function(c) {c.all().removeClass(c.classs())}
+            init: function(c) {c.all().each(function() { this.classList.add(c.classs()) })},
+            undo: function(c) {c.all().each(function() { this.classList.add(c.classs()) })},
+            doit: function(c) {c.all().each(function() { this.classList.remove(c.classs()) })},
+            fast: function(c) {c.all().each(function() { this.classList.remove(c.classs()) })} 
         });
         function svgRealAttrName(a) {
             if (startsWith(a, "svg")) {
