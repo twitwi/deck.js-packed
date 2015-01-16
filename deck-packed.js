@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 6c9661c574585b3ebdfd104fe5918e5dd70a349c .
+  It has been generated from version 16322c026d0e5b6e9953e12362ca665d5d09304e .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -6582,7 +6582,6 @@ It also overrides the defaults keybinding and countNested value (so it is better
         /* Find the current parent and take the previous slide (last of previous top level) */
         var current = $[deck]('getSlideIndex', $[deck]('getSlide'));
         var currentParent = $[deck]('getToplevelSlideOfIndex', current).index;
-        alert(current + " " +currentParent)
         if (currentParent > 0) {
             $[deck]('go', currentParent - 1);
         }
