@@ -20,7 +20,7 @@ In your project, just run:
 
 To eventually see it on [github pages](https://pages.github.com/), you'll need to commit and push these to your gh-pages branch.
 
-## B) How to include this version of deck.js in your HTMl presentation
+## B) How to include this version of deck.js in your HTML presentation
 
 First, you need to include the custom version instead of the deck.js loader:
 
