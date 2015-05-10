@@ -37,5 +37,6 @@ Then, you should remove the profile as it is present in the packed version:
 # Notes on how the packed version is built
 
     git clone https://github.com/twitwi/deck.js tmpdeck
+    git -C tmpdeck/ pull
     node ./tmpdeck/extensions/bundle-maker/make-packed.js profile-5 deck-packed.js
     sed -i -e 's@/home/.*/tmpdeck//*@..../@g' deck-packed.js
