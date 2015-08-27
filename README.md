@@ -7,12 +7,15 @@ This can be convenient if you want any of:
 - a single-file release of deck.js to copy in a project,
 - a faster-loading submodule to use in your presentations hosted on github pages.
 
-## A) option 1: how to use as a simple file
+## Step 1 (option 1): as a single file
 
 Get the latest version (or another version) from github.
-For example at <https://raw.githubusercontent.com/twitwi/deck.js-packed/master/deck-packed.js> and save it next to your HTML file.
+Download and save the file next to your HTML file:
+- most recent: profile-6, smartdown → <https://raw.githubusercontent.com/twitwi/deck.js-packed/master/deck-packed.js>
+- previous: profile-5, smarkdown → <https://raw.githubusercontent.com/twitwi/deck.js-packed/ec861260d7e16cfbb9a3dc11e6551ebc437c8610/deck-packed.js>
 
-## A) option 2: how to use as a submodule (e.g., for gh-pages)
+
+## Step 1 (option 2): as a submodule (e.g., for gh-pages)
 
 In your project, just run:
 
@@ -20,7 +23,7 @@ In your project, just run:
 
 To eventually see it on [github pages](https://pages.github.com/), you'll need to commit and push these to your gh-pages branch.
 
-## B) How to include this version of deck.js in your HTML presentation
+## Step 2 (option 1): include in an existing presentation
 
 First, you need to include the custom version instead of the deck.js loader:
 
@@ -30,13 +33,17 @@ First, you need to include the custom version instead of the deck.js loader:
 Then, you should remove the profile as it is present in the packed version:
 
     includedeck([
-    -    "profile-5",
+    -    "profile-6",
        "theme.css"
+
+## Step 2 (option 2): start from zero
+
+TODO, see includedeck template
 
 
 # Notes on how the packed version is built
 
     git clone https://github.com/twitwi/deck.js tmpdeck
     git -C tmpdeck/ pull
-    node ./tmpdeck/extensions/bundle-maker/make-packed.js profile-5 deck-packed.js
-    sed -i -e 's@/home/.*/tmpdeck//*@..../@g' deck-packed.js
+    node ./tmpdeck/extensions/bundle-maker/make-packed.js profile-6 deck-packed.js
+    sed -i -e 's@/.*/tmpdeck//*@..../@g' deck-packed.js
