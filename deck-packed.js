@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 45b7bcbe55519ecaa8fbf732494f1ebef6131ee8 .
+  It has been generated from version 82a823041dddc43221842d1561c3919e8126ea51 .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -3900,6 +3900,7 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
         if (typeof opts.AFTERSMARKDOWN !== 'undefined') {
             alert("Warning: you're using 'smartdown' but you have a AFTERSMARKDOWN property.\nThis new 'smartdown' (smart vs smark) uses AFTERSMARTDOWN (with a T).")
         }
+        maybe(opts.AFTERSMARTDOWN)();
         $[deck]('reInitSlidesArray')
     });
 
