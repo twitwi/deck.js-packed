@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 145e0af05481569880266b0eea014ce6c5f65e30 .
+  It has been generated from version 510f08b8aad6fbc15523713b4a86497bfa951ab2 .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -3616,8 +3616,8 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
             comm.classList.add('comment');
             $(comm).text(clean(d2));
             
-            if (txtNode.textContent == '') {
-                // in the case the comment is on an empty thingthen move it to previous sibling
+            if (txtNode.textContent == '' && node.childNodes.length == 1) {
+                // in the case the comment is on an empty thing (and only child) then move it to previous sibling
                 node.previousElementSibling.appendChild(comm);
                 node.remove();
             } else {
@@ -3880,12 +3880,31 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
                                         break;
                                     }
                                 }
+                                // if we have a pre>code and we won't unwrap it, propagate the class/id to the pre
+                                if (!unwrapIt) {
+                                    adoptAttributes(node.parentNode, node);
+                                }
                             }
                         }
                         if (unwrapIt) {
                             node.innerHTML = node.textContent; // unescape entities
                             replaceNodeByNodes(node.parentNode, [node]); // pre unwrap
                             changeTagname('textarea')(i, node);
+                        } else {
+                            patch(node);
+                        }
+                    }
+                });
+            })(slide);
+
+            // custom class to change the element type
+            (function patch(tree){ // tree is a slide or a subelement
+                eachNode(tree, function(i, node) {
+                    if (isElement(node)) {
+                        if (hasClass(node, "smartpre")) { // easier to put a pre in a list
+                            changeTagname('pre')(i, node);
+                        } else if (hasClass(node, "smartcode")) { // work around bug with code with entities in lists
+                            changeTagname('code')(i, node);
                         } else {
                             patch(node);
                         }
