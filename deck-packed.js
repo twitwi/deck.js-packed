@@ -1,6 +1,6 @@
 /*
   This is a packed deck.js with some extensions and styles.
-  It has been generated from version 510f08b8aad6fbc15523713b4a86497bfa951ab2 .
+  It has been generated from version 9da8346571b9430f0715bdaac5243d050d607483 .
   It includes:
      ..../extensions/includedeck/load.js
      ..../jquery.min.js
@@ -3486,9 +3486,6 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
     function isObject(o) {
         return !isArray(o) && typeof(o) === 'object';
     }
-    function hasIDOrClassDecoration(s) {
-        return s.match(/^(|([\s\S]*[^\n\r\s]))[\n\r\s]*\{([^{}<>]*)\}[\n\r]*$/);
-    }
     function resolveChunk(include){
         var content = null;
         if (include.startsWith('#')) {
@@ -3530,6 +3527,7 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
             slide = $(base).clone().get(0);
             slide.removeAttribute('id');
             if (hasAnim) {
+                slide.classList.add('anim-continue');
                 $('<div>').text('@anim:'+animPart).insertAfter(slide.firstChild); // first is the heading, we want to keep it there
             }
             slides[s] = slide;
@@ -3544,6 +3542,9 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
             return s;
         }
         return s;
+    }
+    function hasIDOrClassDecoration(s) {
+        return s.match(/^(|([\s\S]*[^\n\r\s]))[\n\r\s]*\{([^{}<>]*)\}[\n\r]*$/);
     }
     function maybeProcessIDOrClassDecoration(txtNode) {
         var txt = txtNode.textContent;
@@ -3755,10 +3756,14 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
             }
         }
     }
-    function eachTextNodeRecursive(tree, f) {
+    function eachTextNodeRecursive(tree, f, prunePredicate) {
+        if (typeof prunePredicate === 'undefined') {
+            prunePredicate = function() { return false; };
+        }
         (function patch(tree) {
             eachNode(tree, function(i, node) {
                 if (isElement(node)) {
+                    if (prunePredicate(i, node)) return;
                     patch(node);
                 } else if (isText(node)) {
                     return f(i, node);
@@ -3850,46 +3855,47 @@ This is actually the third try and it uses showdown.js (1st: smartsyntax, 2nd: s
                 if (maybeProcessIDOrClassDecoration(node)) return -1;
             });
             // process the $math$
-            (function patch(tree){ // tree is a slide or a subelement
-                if (hasClass(tree, 'smark-nomath')) return;
-                eachNode(tree, function(i, node) {
-                    if (isElement(node)) {
-                        patch(node);
-                    } else if (isText(node) && node.textContent.contains('$')) {
-                        var wrap = document.createElement('div');
-                        wrap.innerHTML = processMath(node.textContent);
-                        eachTextNodeRecursive(wrap, function(i2, node2) {
-                            maybeProcessIDOrClassDecoration(node2);
-                        });
-                        replaceNodeByNodes(node, wrap.childNodes);
-                    }
-                });
-            })(slide);
+            eachTextNodeRecursive(slide, function(i, node) { // what to do to a text node
+                if (node.textContent.contains('$')) {
+                    var wrap = document.createElement('div');
+                    wrap.innerHTML = processMath(node.textContent);
+                    eachTextNodeRecursive(wrap, function(i2, node2) {
+                        maybeProcessIDOrClassDecoration(node2);
+                    });
+                    replaceNodeByNodes(node, wrap.childNodes);
+                }
+            }, function(i, node) { // when to prune
+                return hasClass(node, 'smart-nomath')
+                    || node.tagName.match(/^(textarea|code|pre)$/i)
+            });
             // change things to textarea (to help with codemirror) https://github.com/iros/deck.js-codemirror/issues/19
             (function patch(tree){ // tree is a slide or a subelement
                 eachNode(tree, function(i, node) {
                     if (isElement(node)) {
-                        var unwrapIt = hasClass(node, "smartarea");
-                        if (!unwrapIt) { // auto for codemirror language-...
+                        var makeTextarea = hasClass(node, "smartarea");
+                        if (!makeTextarea) { // auto for codemirror language-...
                             if (node.tagName.match(/^code$/i) &&
                                 node.parentNode.tagName.match(/^pre$/i)) {
                                 // we found a code>pre, look for language-... in its classes
                                 for (var i = 0; i < node.classList.length; i++) {
                                     if (node.classList[i].match(/^language-/)) {
-                                        unwrapIt = true;
+                                        makeTextarea = true;
                                         break;
                                     }
                                 }
                                 // if we have a pre>code and we won't unwrap it, propagate the class/id to the pre
-                                if (!unwrapIt) {
+                                if (!makeTextarea) {
                                     adoptAttributes(node.parentNode, node);
                                 }
                             }
                         }
-                        if (unwrapIt) {
+                        if (makeTextarea) {
                             node.innerHTML = node.textContent; // unescape entities
-                            replaceNodeByNodes(node.parentNode, [node]); // pre unwrap
+                            var parent = node.parentNode;
+                            adoptAttributes(parent, node);
                             changeTagname('textarea')(i, node);
+                            changeTagname('div')(-999, parent);
+                            // NB: changeTagname "detaches/replaces" the original 'node' and 'parent'... so don't try to use them down here
                         } else {
                             patch(node);
                         }
