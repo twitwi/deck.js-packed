@@ -7,6 +7,8 @@ This can be convenient if you want any of:
 - a single-file release of deck.js to copy in a project,
 - a faster-loading submodule to use in your presentations hosted on github pages.
 
+See also https://github.com/twitwi/deck.js-packed that uses this version but provides also a tutorial presentation.
+
 ## Step 1 (option 1): as a single file
 
 Get the latest version (or another version) from github.
