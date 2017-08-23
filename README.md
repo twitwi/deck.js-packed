@@ -4,7 +4,7 @@ deck.js-packed
 A single-file version of deck.js with some extensions.
 
 This can be convenient if you want any of:
-- a single-file release of deck.js to copy in a project,
+- a single-file release of [deck.js](https://github.com/twitwi/deck.js) to copy in a project,
 - a faster-loading submodule to use in your presentations hosted on github pages.
 
 See also https://github.com/twitwi/deck.js-packed that uses this version but provides also a tutorial presentation.
