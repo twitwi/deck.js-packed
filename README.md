@@ -41,7 +41,7 @@ Then, you should remove the profile as it is present in the packed version:
 
 ## Step 2 (option 2): start from zero
 
-TODO, see includedeck template
+See the starter kit: https://github.com/twitwi/deck.js-starterkit
 
 
 # Notes on how the packed version is built
