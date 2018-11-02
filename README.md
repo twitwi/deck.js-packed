@@ -13,7 +13,8 @@ See also https://github.com/twitwi/deck.js-starterkit that uses this version but
 
 Get the latest version (or another version) from github.
 Download and save the file next to your HTML file:
-- most recent: profile-7, adds savedom → <https://raw.githubusercontent.com/twitwi/deck.js-packed/master/deck-packed.js>
+- most recent: profile-8, adds annotate/help-area/author-tools, improves smartdown/clone → <https://raw.githubusercontent.com/twitwi/deck.js-packed/master/deck-packed.js>
+- previous: profile-7, adds savedom → <https://raw.githubusercontent.com/twitwi/deck.js-packed/ed2e164fc2ca31939477c1a25c6c1d0aad005271/deck-packed.js>
 - previous: profile-6, smartdown → <https://raw.githubusercontent.com/twitwi/deck.js-packed/3703ca53bff2cec6f4ff0d329c1738f6f61c3be0/deck-packed.js>
 - previous: profile-5, smarkdown → <https://raw.githubusercontent.com/twitwi/deck.js-packed/ec861260d7e16cfbb9a3dc11e6551ebc437c8610/deck-packed.js>
 
@@ -36,7 +37,7 @@ First, you need to include the custom version instead of the deck.js loader:
 Then, you should remove the profile as it is present in the packed version:
 
     includedeck([
-    -    "profile-7",
+    -    "profile-8",
        "theme.css"
 
 ## Step 2 (option 2): start from zero
@@ -48,5 +49,5 @@ See the starter kit: https://github.com/twitwi/deck.js-starterkit
 
     git clone https://github.com/twitwi/deck.js tmpdeck
     git -C tmpdeck/ pull
-    node ./tmpdeck/extensions/bundle-maker/make-packed.js profile-7 deck-packed.js
+    node ./tmpdeck/extensions/bundle-maker/make-packed.js profile-8 deck-packed.js
     sed -i -e 's@/.*/tmpdeck//*@..../@g' deck-packed.js*
